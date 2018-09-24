@@ -1,31 +1,6 @@
 package cn.gson.oasys.controller.mail;
 
 
-import java.io.IOException;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.StringTokenizer;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttribute;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.github.pagehelper.util.StringUtil;
-
 import cn.gson.oasys.common.formValid.BindingResultVOUtil;
 import cn.gson.oasys.common.formValid.MapToList;
 import cn.gson.oasys.common.formValid.ResultEnum;
@@ -45,7 +20,6 @@ import cn.gson.oasys.model.entity.mail.Mailnumber;
 import cn.gson.oasys.model.entity.mail.Mailreciver;
 import cn.gson.oasys.model.entity.mail.Pagemail;
 import cn.gson.oasys.model.entity.note.Attachment;
-import cn.gson.oasys.model.entity.role.Role;
 import cn.gson.oasys.model.entity.system.SystemStatusList;
 import cn.gson.oasys.model.entity.system.SystemTypeList;
 import cn.gson.oasys.model.entity.user.Dept;
@@ -53,6 +27,23 @@ import cn.gson.oasys.model.entity.user.Position;
 import cn.gson.oasys.model.entity.user.User;
 import cn.gson.oasys.services.mail.MailServices;
 import cn.gson.oasys.services.process.ProcessService;
+import com.github.pagehelper.util.StringUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.io.IOException;
+import java.util.*;
 
 @Controller
 @RequestMapping("/")
@@ -267,13 +258,14 @@ public class MailController {
 				StringTokenizer st = new StringTokenizer(ids, ",");
 				while (st.hasMoreElements()) {
 					//找到该用户联系邮件的中间记录
-					Mailreciver	mailr=mrdao.findbyReciverIdAndmailId(user,Long.parseLong(st.nextToken()));
-					if(mailr.getRead().equals(false)){
-						mailr.setRead(true);
+					System.out.println();
+					Mailreciver	mailrec=mrdao.findbyReciverIdAndmailId(user,Long.parseLong(st.nextToken()));
+					if(mailrec.getRead().equals(false)){
+						mailrec.setRead(true);
 					}else{
-						mailr.setRead(false);
+						mailrec.setRead(false);
 					}
-					mrdao.save(mailr);
+					mrdao.save(mailrec);
 				}
 				//分页及查找
 				pagelist=mservice.recive(page, size, user, null,title);
@@ -715,7 +707,7 @@ public class MailController {
 		}
 		if(!StringUtil.isEmpty(req.getParameter("qufen"))){
 			qufen=req.getParameter("qufen").trim();
-			
+
 			System.out.println("111");
 			if(StringUtil.isEmpty(name)){
 				// 查询部门下面的员工
@@ -724,7 +716,7 @@ public class MailController {
 				// 查询名字模糊查询员工
 				pageuser = udao.findbyFatherId(name,userId,pa);
 			}
-			
+
 		}else{
 			if(StringUtil.isEmpty(name)){
 				//查看用户并分页

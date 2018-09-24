@@ -320,4 +320,12 @@ public class IndexController {
 		return info;
 	}
 
+	@RequestMapping("getDocById")
+	public String getDocById(HttpSession session, Model model, HttpServletRequest request) {
+
+
+		model.addAttribute("icount",5);
+		return "";
+	}
+
 }

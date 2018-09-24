@@ -1,24 +1,28 @@
 package cn.gson.oasys.controller.note;
 
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-
+import cn.gson.oasys.common.formValid.BindingResultVOUtil;
+import cn.gson.oasys.common.formValid.MapToList;
+import cn.gson.oasys.common.formValid.ResultEnum;
+import cn.gson.oasys.common.formValid.ResultVO;
+import cn.gson.oasys.model.dao.notedao.*;
+import cn.gson.oasys.model.dao.system.StatusDao;
+import cn.gson.oasys.model.dao.system.TypeDao;
+import cn.gson.oasys.model.dao.user.DeptDao;
+import cn.gson.oasys.model.dao.user.PositionDao;
+import cn.gson.oasys.model.dao.user.UserDao;
+import cn.gson.oasys.model.entity.note.Attachment;
+import cn.gson.oasys.model.entity.note.Catalog;
+import cn.gson.oasys.model.entity.note.Note;
+import cn.gson.oasys.model.entity.note.Noteuser;
+import cn.gson.oasys.model.entity.system.SystemStatusList;
+import cn.gson.oasys.model.entity.system.SystemTypeList;
+import cn.gson.oasys.model.entity.user.Dept;
+import cn.gson.oasys.model.entity.user.Position;
+import cn.gson.oasys.model.entity.user.User;
+import cn.gson.oasys.services.file.FileServices;
+import cn.gson.oasys.services.process.ProcessService;
+import com.github.pagehelper.util.StringUtil;
 import org.apache.commons.io.IOUtils;
 import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
@@ -37,35 +41,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.github.pagehelper.util.StringUtil;
-
-import cn.gson.oasys.common.formValid.BindingResultVOUtil;
-import cn.gson.oasys.common.formValid.MapToList;
-import cn.gson.oasys.common.formValid.ResultEnum;
-import cn.gson.oasys.common.formValid.ResultVO;
-import cn.gson.oasys.controller.attendce.AttendceController;
-import cn.gson.oasys.model.dao.notedao.AttachmentDao;
-import cn.gson.oasys.model.dao.notedao.CatalogDao;
-import cn.gson.oasys.model.dao.notedao.CatalogService;
-import cn.gson.oasys.model.dao.notedao.NoteDao;
-import cn.gson.oasys.model.dao.notedao.NoteService;
-import cn.gson.oasys.model.dao.notedao.NoteUserDao;
-import cn.gson.oasys.model.dao.system.StatusDao;
-import cn.gson.oasys.model.dao.system.TypeDao;
-import cn.gson.oasys.model.dao.user.DeptDao;
-import cn.gson.oasys.model.dao.user.PositionDao;
-import cn.gson.oasys.model.dao.user.UserDao;
-import cn.gson.oasys.model.entity.note.Attachment;
-import cn.gson.oasys.model.entity.note.Catalog;
-import cn.gson.oasys.model.entity.note.Note;
-import cn.gson.oasys.model.entity.note.Noteuser;
-import cn.gson.oasys.model.entity.system.SystemStatusList;
-import cn.gson.oasys.model.entity.system.SystemTypeList;
-import cn.gson.oasys.model.entity.user.Dept;
-import cn.gson.oasys.model.entity.user.Position;
-import cn.gson.oasys.model.entity.user.User;
-import cn.gson.oasys.services.file.FileServices;
-import cn.gson.oasys.services.process.ProcessService;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.*;
 
 @Controller
 @RequestMapping("/")
@@ -604,8 +589,8 @@ public class NoteController {
 		Pageable pa=new PageRequest(page, size);
 		String name=null;
 		String qufen=null;
-		Page<User> pageuser=null;
-		List<User> userlist=null;
+		Page<User> pageuser;
+		List<User> userlist;
 		
 		if(!StringUtil.isEmpty(req.getParameter("title"))){
 			name=req.getParameter("title").trim();
@@ -613,7 +598,6 @@ public class NoteController {
 		if(!StringUtil.isEmpty(req.getParameter("qufen"))){
 			qufen=req.getParameter("qufen").trim();
 			
-			System.out.println("111");
 			if(StringUtil.isEmpty(name)){
 				// 查询部门下面的员工
 				pageuser = userDao.findByFatherId(userId,pa);
