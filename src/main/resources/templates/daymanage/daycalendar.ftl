@@ -120,7 +120,7 @@
 				var username = event.user;
 				var des = event.des;
 				var typeid = event.rctype;
-				console.log(typeid); 
+				// console.log(typeid);
 				var typename;
 				if(typeid=='44'){
 					typename='日程提醒';
@@ -136,7 +136,7 @@
 				$('#myModal .rcdescription').html(des);
 				
 				$('#myModal').modal('show');
-				console.log(event.id);
+				// console.log(event.id);
 			},
 
 			editable: false,
@@ -164,10 +164,11 @@
 					 success:function(data){
 						 var events = [];
 						 $.each(data,function(i,item){
-							 console.log(item);
+
 							 var color;
-							 var starttime =dateformat(new Date(item.startTime));
-							 var endtime = dateformat(new Date(item.endTime));
+							 var starttime =new Date(item.startTime);
+							 var endtime = new Date(item.endTime);
+                             //console.log(starttime+"："+endtime);
 							 if(item.statusId=='27'){
 								 color="#00c0ef";
 							 }
@@ -207,6 +208,6 @@
 	});
 	var dateformat = function(a) {
         return a.getFullYear() + "-" + (a.getMonth() + 1) + "-" + a.getDate() + " " + a.getHours() + ":" + a.getMinutes() + ":" + a.getSeconds();
-    };
-	
+	};
+
 </script>

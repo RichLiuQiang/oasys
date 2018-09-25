@@ -74,14 +74,14 @@ li.activee>a {
 <div class="row" style="padding-top: 10px;">
 	<div class="col-md-2">
 		<h1 style="font-size: 24px; margin: 0;" class="">通讯录
-		<a href="" class="label xinzeng" style="padding: 5px;margin-left:5px;">
-						<span class="glyphicon glyphicon-refresh"></span> 刷新
-					</a>
-		</h1>
+		<#--<a href="" class="label xinzeng" style="padding: 5px;margin-left:5px;">-->
+						<#--<span class="glyphicon glyphicon-refresh"></span> 刷新-->
+					<#--</a>-->
+		<#--</h1>-->
 	</div>
 	<div class="col-md-10 text-right">
 		<a href="##"><span class="glyphicon glyphicon-home"></span> 首页</a> > <a
-			disabled="disabled">通讯录</a>
+			disabled="disabled">通讯录gggg</a>
 	</div>
 </div>
 <div class="row" style="padding-top: 15px;">

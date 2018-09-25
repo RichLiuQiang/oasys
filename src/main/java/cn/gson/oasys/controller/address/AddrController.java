@@ -193,7 +193,6 @@ public class AddrController {
 		model.addAttribute("calogs", calogs);
 		if(!StringUtils.isEmpty(did)){
 			Director director=addressDao.findOne(did);
-			System.out.println();
 			if(Objects.isNull(director)||director.getMyuser().getUserId()!=userId){
 				System.out.println("权限不匹配，不能操作");
 				return "redirect:/notlimit";
@@ -439,7 +438,7 @@ public class AddrController {
 	@RequestMapping("modalshare")
 	public String modalShare(@RequestParam(value="page",defaultValue="0") int page,Model model,
 			@RequestParam(value="size",defaultValue="10") int size){
-		Pageable pa=new PageRequest(0, 10);
+		Pageable pa=new PageRequest(0,    10);
 		Page<User> userspage=uDao.findAll(pa);
 		List<User> users=userspage.getContent();
 		model.addAttribute("modalurl", "modalpaging");

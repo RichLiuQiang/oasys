@@ -252,7 +252,6 @@ public class NoteController {
 					} else
 						userss.add(user2);
 				}
-
 			} else {
 				// 保存为该用户的笔记 绑定用户id
 				userss = new HashSet<>();
